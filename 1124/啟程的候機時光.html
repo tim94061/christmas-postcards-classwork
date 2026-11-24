@@ -1,0 +1,2231 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="artifact-type" content="narrative">
+  <meta name="design-style" content="deco">
+  <title>啟程的候機時光 — 聖誕夜航廈互動手札</title>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&family=Lora:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@1.43.0/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      color-scheme: dark;
+
+      /* 1. Deco Base + Christmas Emerald & Gold Surfaces */
+      --background: #0a1511;               /* 深夜松林墨綠漆面 */
+      --surface-container-low: #101f19;    /* 微升一階：內嵌閱讀區 */
+      --surface-container: #152921;        /* 墨綠大理石：主卡片與面板 */
+      --surface-container-high: #1d382d;   /* 深松綠：懸停與選取狀態 */
+
+      /* 墨色與文字 */
+      --on-surface: #f5ede0;               /* 溫潤羊皮紙奶白 */
+      --on-surface-variant: #cdc3ae;       /* 暖石灰：說明與副標 */
+
+      /* 線條與框線 */
+      --outline: #d4aa53;                  /* 鍛金：雙層金框與分隔線 */
+      --outline-variant: #5a4b29;          /* 暗古銅：細線與格線，不用於內文 */
+
+      /* 重點色：鍛金 × 聖誕冬青紅 × 松針綠 */
+      --primary: #d4aa53;                  /* 鍛金 */
+      --on-primary: #0a1511;
+      --primary-container: #2c2414;        /* 煙燻金底 */
+      --on-primary-container: #f0d799;
+      --secondary: #7ec2a3;                /* 冬青玉綠：引言與航廈狀態 */
+      --tertiary: #e6c675;                 /* 亮金：標籤與懸停 */
+      --christmas-crimson: #a83232;        /* 聖誕漿果紅按鈕底 */
+      --christmas-crimson-bright: #e36b6b; /* 高對比節慶紅文字/標記 */
+      --christmas-crimson-soft: rgb(168 50 50 / 0.22);
+      --error: #e8836f;
+      --on-error: #0a1511;
+
+      /* 圖表與資料色系 */
+      --data-1: #d4aa53;
+      --data-2: #7ec2a3;
+      --data-3: #e36b6b;
+      --data-4: #8aa9d6;
+      --data-context: #6b7a72;
+
+      /* 語意色與焦點環 */
+      --positive: #7ec2a3;
+      --warning: #e6c675;
+      --focus: #e6c675;
+
+      /* 燈光與氛圍效果 Token */
+      --lamp-warmth: rgb(255 204 128 / 0.16);
+      --lamp-amber: rgb(230 175 88 / 0.24);
+      --lamp-cool: rgb(126 194 163 / 0.08);
+      --bulb-warm: #ffd88a;
+      --bulb-crimson: #e36b6b;
+      --bulb-emerald: #7ec2a3;
+      --bulb-glow-strong: 0 0 18px rgb(255 216 138 / 0.65);
+      --bulb-glow-soft: 0 0 10px rgb(255 216 138 / 0.35);
+      --snow-rgb: 245, 237, 224;
+      --snow-gold-rgb: 230, 198, 117;
+      --postcard-paper: #f6efe2;
+      --postcard-ink: #1e2420;
+      --postcard-muted: #575247;
+      --postcard-stamp-line: #a83232;
+
+      /* 字體：非拉丁字體優先 */
+      --font-headline: 'Noto Serif TC', 'Josefin Sans', serif;
+      --font-body: 'Noto Sans TC', 'Lora', sans-serif;
+      --font-label: 'Noto Sans TC', 'JetBrains Mono', monospace;
+      --font-latin-display: 'Josefin Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      /* 造型 */
+      --rounded: 0px;
+      --rounded-sm: 2px;
+      --rounded-lg: 0px;
+      --rounded-full: 9999px;
+
+      /* Deco 樣式效果 */
+      --gold-rule: 1px solid var(--outline);
+      --bronze-rule: 1px solid var(--outline-variant);
+      --gold-frame-inset: 6px;
+      --pinstripe: repeating-linear-gradient(90deg, rgb(212 170 83 / 0.045) 0 1px, transparent 1px 28px);
+      --flank-rule-width: 38px;
+      --card-shadow: 0 16px 40px rgb(0 0 0 / 0.42);
+
+      /* 敘事型字級尺度 */
+      --display-size:  clamp(2.25rem, 1.4rem + 3.2vw, 3.85rem);
+      --headline-size: clamp(1.55rem, 1.15rem + 1.6vw, 2.35rem);
+      --subhead-size:  clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+      --body-size:     clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+      --label-size:    clamp(0.75rem, 0.72rem + 0.12vw, 0.8125rem);
+
+      /* 間距尺度 (4pt base) */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2.5rem;
+      --space-2xl: 4rem;
+      --space-3xl: 5.5rem;
+
+      /* 動態曲線 */
+      --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --dur-micro: 120ms;
+      --dur-short: 240ms;
+      --dur-long:  460ms;
+    }
+
+    /* Base reset */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      overflow-x: clip;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background);
+      background-image: var(--pinstripe);
+      color: var(--on-surface);
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.7;
+      scroll-behavior: smooth;
+    }
+    header { position: static !important; }
+    button, input, select, textarea { font-family: inherit; }
+
+    /* 氛圍燈光疊層（透過 data-lighting 動態切換） */
+    body[data-lighting="fireplace"] {
+      --lamp-warmth: rgb(255 196 112 / 0.22);
+      --lamp-amber: rgb(228 148 76 / 0.24);
+    }
+    body[data-lighting="candle"] {
+      --lamp-warmth: rgb(255 216 148 / 0.14);
+      --lamp-amber: rgb(212 170 83 / 0.14);
+    }
+    body[data-lighting="starlight"] {
+      --lamp-warmth: rgb(126 194 163 / 0.12);
+      --lamp-amber: rgb(138 169 214 / 0.14);
+    }
+
+    .ambient-glow {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background:
+        radial-gradient(ellipse 68% 45% at 50% 0%, var(--lamp-warmth), transparent 72%),
+        radial-gradient(circle at 14% 28%, var(--lamp-amber), transparent 46%),
+        radial-gradient(circle at 86% 62%, var(--lamp-cool), transparent 50%);
+      transition: background var(--dur-long) var(--ease-out);
+    }
+
+    #snow-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    /* 主版面網格 */
+    .page-grid {
+      position: relative;
+      z-index: 5;
+      display: grid;
+      gap: var(--space-2xl);
+      padding: 0 var(--space-lg) var(--space-3xl);
+      max-width: 1120px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .page-grid * { min-width: 0; }
+
+    /* 焦點環 */
+    :focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    /* 頂部聖誕松枝與燈串裝飾帶 */
+    .garland-banner {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+      overflow: hidden;
+      padding-top: var(--space-xs);
+    }
+    .garland-svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      min-height: 68px;
+    }
+    .bulb {
+      transition: opacity var(--dur-long) var(--ease-in-out), filter var(--dur-long) var(--ease-in-out);
+    }
+    body:not([data-lighting="starlight"]) .bulb-warm {
+      animation: bulb-pulse 3.2s var(--ease-in-out) infinite;
+    }
+    body:not([data-lighting="starlight"]) .bulb-crimson {
+      animation: bulb-pulse 3.8s var(--ease-in-out) infinite 0.7s;
+    }
+    body:not([data-lighting="starlight"]) .bulb-emerald {
+      animation: bulb-pulse 3.5s var(--ease-in-out) infinite 1.3s;
+    }
+    body[data-lighting="starlight"] .bulb {
+      opacity: 0.45;
+      animation: none;
+    }
+    @keyframes bulb-pulse {
+      0%, 100% { opacity: 0.72; }
+      50% { opacity: 1; }
+    }
+
+    /* Deco 雙金框與標題系統 */
+    .deco-frame {
+      position: relative;
+      border: var(--gold-rule);
+      outline: var(--gold-rule);
+      outline-offset: calc(-1 * var(--gold-frame-inset));
+      background-color: var(--surface-container-low);
+      padding: var(--space-xl) var(--space-xl);
+      text-align: center;
+      box-shadow: var(--card-shadow);
+    }
+
+    .corner-sprig {
+      position: absolute;
+      width: 44px;
+      height: 44px;
+      pointer-events: none;
+      color: var(--primary);
+    }
+    .corner-sprig.tl { top: 10px; left: 10px; }
+    .corner-sprig.tr { top: 10px; right: 10px; transform: scaleX(-1); }
+    .corner-sprig.bl { bottom: 10px; left: 10px; transform: scaleY(-1); }
+    .corner-sprig.br { bottom: 10px; right: 10px; transform: scale(-1); }
+
+    .flanked {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      font-weight: 600;
+      color: var(--primary);
+      margin: 0;
+    }
+    .flanked::before, .flanked::after {
+      content: "";
+      display: inline-block;
+      width: var(--flank-rule-width);
+      height: 1px;
+      background: var(--outline);
+      flex-shrink: 0;
+    }
+    .latin-kicker {
+      font-family: var(--font-latin-display);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      font-family: var(--font-headline);
+      font-size: var(--display-size);
+      font-weight: 600;
+      line-height: 1.18;
+      color: var(--on-surface);
+      margin: var(--space-md) auto var(--space-sm);
+      max-width: 18ch;
+    }
+    .hero-title .gold-accent {
+      color: var(--primary);
+    }
+    .hero-lede {
+      font-size: var(--subhead-size);
+      color: var(--on-surface-variant);
+      max-width: 52ch;
+      margin: 0 auto var(--space-lg);
+      line-height: 1.75;
+    }
+
+    /* 候機室氛圍控制台 */
+    .ambiance-console {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-md);
+      padding-top: var(--space-lg);
+      border-top: var(--bronze-rule);
+    }
+    .console-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+    .console-label {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+      margin-right: var(--space-xs);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+
+    /* 按鈕規格：44px 最小觸控高度 */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-xs);
+      min-height: 44px;
+      padding: var(--space-xs) var(--space-md);
+      border: var(--gold-rule);
+      background: transparent;
+      color: var(--primary);
+      font-size: var(--label-size);
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color var(--dur-short) var(--ease-out), color var(--dur-short) var(--ease-out), box-shadow var(--dur-short) var(--ease-out);
+      white-space: nowrap;
+    }
+    .btn:hover {
+      background: var(--surface-container-high);
+      color: var(--tertiary);
+    }
+    .btn.is-active,
+    .btn-primary {
+      background: var(--primary);
+      color: var(--on-primary);
+    }
+    .btn.is-active:hover,
+    .btn-primary:hover {
+      background: var(--tertiary);
+      color: var(--on-primary);
+    }
+    .btn-crimson {
+      background: var(--christmas-crimson);
+      border-color: var(--christmas-crimson-bright);
+      color: var(--on-surface);
+    }
+    .btn-crimson:hover {
+      background: var(--christmas-crimson-bright);
+      color: var(--on-primary);
+    }
+    .btn-sm {
+      min-height: 44px;
+      padding: var(--space-xs) var(--space-sm);
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* 關鍵航廈指標列 */
+    .metrics-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-md);
+      margin-top: var(--space-xl);
+    }
+    .metric-cell {
+      border: var(--bronze-rule);
+      background: var(--background);
+      padding: var(--space-md);
+      text-align: center;
+    }
+    .metric-label {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--primary);
+      margin-bottom: var(--space-xs);
+    }
+    .metric-value {
+      font-family: var(--font-mono);
+      font-size: clamp(1.35rem, 1.1rem + 0.9vw, 1.85rem);
+      font-weight: 500;
+      color: var(--on-surface);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.05em;
+    }
+    .metric-note {
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+      margin-top: var(--space-xs);
+    }
+
+    /* 章節標頭 */
+    .section-block {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+    }
+    .section-head {
+      text-align: center;
+      border-bottom: var(--gold-rule);
+      padding-bottom: var(--space-md);
+    }
+    .section-title {
+      font-family: var(--font-headline);
+      font-size: var(--headline-size);
+      font-weight: 600;
+      color: var(--on-surface);
+      margin: var(--space-sm) 0 var(--space-xs);
+      line-height: 1.25;
+    }
+    .section-prose {
+      max-width: 64ch;
+      margin: 0 auto;
+      color: var(--on-surface-variant);
+      text-align: left;
+    }
+    .section-prose strong {
+      color: var(--on-surface);
+      font-weight: 600;
+    }
+
+    /* 第一章：雙明信片互動展覽區 */
+    .postcard-gallery {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.16fr);
+      gap: var(--space-xl);
+      align-items: start;
+    }
+    .postcard-unit {
+      container-type: inline-size;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+      background: var(--surface-container);
+      border: var(--bronze-rule);
+      padding: var(--space-lg);
+      box-shadow: var(--card-shadow);
+    }
+    .postcard-meta-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-sm);
+      border-bottom: var(--bronze-rule);
+      padding-bottom: var(--space-sm);
+    }
+    .postcard-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      font-family: var(--font-mono);
+      font-size: var(--label-size);
+      color: var(--tertiary);
+      border: var(--bronze-rule);
+      padding: 2px var(--space-sm);
+      background: var(--background);
+    }
+    .postcard-badge-festive {
+      font-size: var(--label-size);
+      color: var(--christmas-crimson-bright);
+      background: var(--christmas-crimson-soft);
+      border: 1px solid var(--christmas-crimson-bright);
+      padding: 2px var(--space-sm);
+      font-weight: 600;
+    }
+
+    /* 3D 翻轉明信片容器 */
+    .flip-stage {
+      perspective: 1400px;
+      width: 100%;
+    }
+    .flip-card {
+      position: relative;
+      width: 100%;
+      transform-style: preserve-3d;
+      transition: transform var(--dur-long) var(--ease-out);
+    }
+    .flip-card.is-flipped {
+      transform: rotateY(180deg);
+    }
+    .flip-card.is-flipped .flip-front {
+      pointer-events: none;
+    }
+    .flip-card:not(.is-flipped) .flip-back {
+      pointer-events: none;
+    }
+    .ratio-4-3 { aspect-ratio: 800 / 600; }
+    .ratio-pano { aspect-ratio: 800 / 435; }
+
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border: var(--gold-rule);
+      overflow: hidden;
+      background: var(--background);
+    }
+    .flip-front {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .flip-front img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform var(--dur-long) var(--ease-out);
+    }
+    .postcard-unit:hover .flip-front img {
+      transform: scale(1.015);
+    }
+
+    /* 金屬相角裝飾 */
+    .photo-corner {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-color: var(--primary);
+      border-style: solid;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .photo-corner.tl { top: 6px; left: 6px; border-width: 2px 0 0 2px; }
+    .photo-corner.tr { top: 6px; right: 6px; border-width: 2px 2px 0 0; }
+    .photo-corner.bl { bottom: 6px; left: 6px; border-width: 0 0 2px 2px; }
+    .photo-corner.br { bottom: 6px; right: 6px; border-width: 0 2px 2px 0; }
+
+    /* 明信片背面（復古聖誕航空明信片排版） */
+    .flip-back {
+      transform: rotateY(180deg);
+      background: var(--postcard-paper);
+      color: var(--postcard-ink);
+      padding: var(--space-md);
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      gap: var(--space-md);
+      align-items: stretch;
+    }
+    .postcard-back-left {
+      border-right: 1px solid var(--outline-variant);
+      padding-right: var(--space-md);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: left;
+    }
+    .postcard-back-kicker {
+      font-family: var(--font-mono);
+      font-size: var(--label-size);
+      color: var(--postcard-stamp-line);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .postcard-back-note {
+      font-family: var(--font-headline);
+      font-size: clamp(0.95rem, 0.85rem + 0.35vw, 1.125rem);
+      line-height: 1.65;
+      color: var(--postcard-ink);
+      margin: var(--space-xs) 0;
+    }
+    .postcard-back-sig {
+      font-family: var(--font-mono);
+      font-size: var(--label-size);
+      color: var(--postcard-muted);
+    }
+    .postcard-back-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-end;
+      text-align: left;
+    }
+    .stamp-box {
+      width: 72px;
+      height: 82px;
+      border: 1.5px dashed var(--postcard-stamp-line);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-xs);
+      color: var(--postcard-stamp-line);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      line-height: 1.2;
+      text-align: center;
+    }
+    .address-lines {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+    .address-line {
+      border-bottom: 1px solid var(--outline-variant);
+      padding-bottom: 2px;
+      font-size: var(--label-size);
+      color: var(--postcard-muted);
+      font-family: var(--font-mono);
+    }
+
+    .postcard-caption {
+      text-align: left;
+      color: var(--on-surface-variant);
+      font-size: 0.95rem;
+      line-height: 1.65;
+      margin: 0;
+    }
+    .postcard-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+    }
+
+    /* 展開細賞面板 */
+    .inspect-drawer {
+      background: var(--surface-container-low);
+      border: var(--gold-rule);
+      padding: var(--space-lg);
+      display: none;
+      flex-direction: column;
+      gap: var(--space-md);
+      animation: fade-slide var(--dur-short) var(--ease-out);
+    }
+    .inspect-drawer.is-open {
+      display: flex;
+    }
+    .inspect-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-sm);
+      border-bottom: var(--bronze-rule);
+      padding-bottom: var(--space-sm);
+    }
+    .inspect-img-wrap {
+      width: 100%;
+      background: var(--background);
+      border: var(--bronze-rule);
+      padding: var(--space-sm);
+      display: flex;
+      justify-content: center;
+    }
+    .inspect-img-wrap img {
+      max-width: 100%;
+      max-height: 540px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    @keyframes fade-slide {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 第二章：候機室時間軸與航班資訊板 */
+    .lounge-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: var(--space-xl);
+      align-items: start;
+    }
+    .timeline-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+    .timeline-step {
+      width: 100%;
+      text-align: left;
+      background: var(--surface-container);
+      border: var(--bronze-rule);
+      padding: var(--space-md);
+      color: var(--on-surface);
+      cursor: pointer;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: var(--space-md);
+      align-items: start;
+      transition: background-color var(--dur-short) var(--ease-out), border-color var(--dur-short) var(--ease-out);
+    }
+    .timeline-step:hover {
+      background: var(--surface-container-high);
+    }
+    .timeline-step.is-active {
+      background: var(--surface-container-high);
+      border-color: var(--primary);
+      box-shadow: inset 3px 0 0 var(--primary);
+    }
+    .step-time {
+      font-family: var(--font-mono);
+      font-size: var(--label-size);
+      color: var(--primary);
+      padding-top: 2px;
+      white-space: nowrap;
+    }
+    .step-title {
+      font-family: var(--font-headline);
+      font-size: var(--subhead-size);
+      font-weight: 600;
+      margin: 0 0 var(--space-xs);
+    }
+    .step-summary {
+      font-size: 0.92rem;
+      color: var(--on-surface-variant);
+      margin: 0;
+    }
+
+    /* 復古航班登機看板 */
+    .flight-board {
+      background: var(--background);
+      border: var(--gold-rule);
+      outline: var(--bronze-rule);
+      outline-offset: -6px;
+      padding: var(--space-lg);
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+    .board-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: var(--bronze-rule);
+      padding-bottom: var(--space-sm);
+      gap: var(--space-sm);
+    }
+    .board-code {
+      font-family: var(--font-mono);
+      font-size: var(--label-size);
+      color: var(--primary);
+      letter-spacing: 0.12em;
+    }
+    .status-pill {
+      font-family: var(--font-mono);
+      font-size: var(--label-size);
+      padding: 2px var(--space-sm);
+      border: 1px solid var(--secondary);
+      color: var(--secondary);
+      background: var(--surface-container-low);
+    }
+    .status-pill.is-boarding {
+      border-color: var(--christmas-crimson-bright);
+      color: var(--christmas-crimson-bright);
+      background: var(--christmas-crimson-soft);
+    }
+    .board-rows {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-md);
+    }
+    .board-field-label {
+      font-family: var(--font-mono);
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+      margin-bottom: 2px;
+    }
+    .board-field-val {
+      font-family: var(--font-mono);
+      font-size: 1.05rem;
+      color: var(--on-surface);
+      font-weight: 500;
+    }
+    .board-story {
+      border-top: var(--bronze-rule);
+      padding-top: var(--space-md);
+      font-size: 0.96rem;
+      color: var(--on-surface-variant);
+      line-height: 1.75;
+    }
+    .board-story strong {
+      color: var(--primary);
+    }
+
+    /* 第三章：聖誕明信片書寫與蓋印工坊 */
+    .studio-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+      gap: var(--space-xl);
+      align-items: start;
+    }
+    .studio-form {
+      background: var(--surface-container);
+      border: var(--bronze-rule);
+      padding: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+      text-align: left;
+    }
+    .field-label {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      font-weight: 600;
+      color: var(--primary);
+    }
+    .text-input,
+    .text-area {
+      width: 100%;
+      background: var(--background);
+      border: var(--bronze-rule);
+      border-bottom: var(--gold-rule);
+      color: var(--on-surface);
+      padding: var(--space-sm) var(--space-md);
+      font-size: 0.95rem;
+      min-height: 44px;
+    }
+    .text-area {
+      min-height: 96px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+    .choice-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-sm);
+    }
+    .stamp-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-sm);
+    }
+    .form-feedback {
+      font-size: var(--label-size);
+      min-height: 1.4em;
+      color: var(--secondary);
+      text-align: left;
+    }
+    .form-feedback.is-error {
+      color: var(--error);
+    }
+
+    /* 即時明信片預覽 */
+    .studio-preview-panel {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+    .live-postcard {
+      background: var(--postcard-paper);
+      color: var(--postcard-ink);
+      border: var(--gold-rule);
+      padding: var(--space-lg);
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+      position: relative;
+    }
+    .live-postcard-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-md);
+      border-bottom: 1px solid var(--outline-variant);
+      padding-bottom: var(--space-md);
+    }
+    .live-thumb-box {
+      width: 132px;
+      flex-shrink: 0;
+      border: 1px solid var(--outline-variant);
+      background: var(--background);
+      overflow: hidden;
+    }
+    .live-thumb-box img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .wax-seal-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--postcard-stamp-line);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-align: center;
+    }
+    .live-postcard-body {
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+    .live-recipient {
+      font-family: var(--font-mono);
+      font-size: var(--label-size);
+      color: var(--postcard-muted);
+    }
+    .live-message {
+      font-family: var(--font-headline);
+      font-size: 1.1rem;
+      line-height: 1.75;
+      color: var(--postcard-ink);
+      margin: 0;
+      min-height: 4.5em;
+    }
+    .live-postmark {
+      border-top: 1px solid var(--outline-variant);
+      padding-top: var(--space-sm);
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: var(--label-size);
+      color: var(--postcard-muted);
+    }
+    .wax-stamp-anim {
+      animation: stamp-pop var(--dur-long) var(--ease-out);
+    }
+    @keyframes stamp-pop {
+      0% { transform: scale(1.35) rotate(-12deg); opacity: 0.4; }
+      70% { transform: scale(0.96) rotate(2deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    /* 已封存信件匣 */
+    .saved-outbox {
+      background: var(--surface-container-low);
+      border: var(--bronze-rule);
+      padding: var(--space-md);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+    .outbox-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    .outbox-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+    .outbox-item {
+      border: var(--bronze-rule);
+      background: var(--surface-container);
+      padding: var(--space-sm) var(--space-md);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-md);
+      text-align: left;
+    }
+    .outbox-item-title {
+      font-weight: 600;
+      color: var(--on-surface);
+      font-size: 0.92rem;
+    }
+    .outbox-item-msg {
+      color: var(--on-surface-variant);
+      font-size: 0.86rem;
+      margin-top: 2px;
+    }
+
+    /* 第四章：啟程行囊檢核清單 */
+    .checklist-panel {
+      background: var(--surface-container);
+      border: var(--gold-rule);
+      padding: var(--space-xl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+    .checklist-progress-bar {
+      width: 100%;
+      height: 6px;
+      background: var(--background);
+      border: var(--bronze-rule);
+      overflow: hidden;
+    }
+    .checklist-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--primary);
+      transition: width var(--dur-short) var(--ease-out);
+    }
+    .ritual-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+      gap: var(--space-md);
+    }
+    .ritual-item {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-sm);
+      background: var(--background);
+      border: var(--bronze-rule);
+      padding: var(--space-md);
+      cursor: pointer;
+      min-height: 44px;
+      text-align: left;
+      transition: border-color var(--dur-short) var(--ease-out), background-color var(--dur-short) var(--ease-out);
+    }
+    .ritual-item:hover {
+      background: var(--surface-container-high);
+    }
+    .ritual-item.is-checked {
+      border-color: var(--secondary);
+      background: var(--surface-container-low);
+    }
+    .ritual-checkbox {
+      width: 20px;
+      height: 20px;
+      border: 1.5px solid var(--primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+      color: var(--on-primary);
+      background: transparent;
+    }
+    .ritual-item.is-checked .ritual-checkbox {
+      background: var(--secondary);
+      border-color: var(--secondary);
+    }
+    .ritual-text {
+      font-size: 0.95rem;
+      color: var(--on-surface);
+    }
+    .ritual-item.is-checked .ritual-text {
+      color: var(--on-surface-variant);
+      text-decoration: line-through;
+    }
+
+    /* 頁尾 */
+    .footer-note {
+      border-top: var(--gold-rule);
+      padding-top: var(--space-lg);
+      text-align: center;
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    /* 捲動顯影 */
+    .reveal {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity var(--dur-long) var(--ease-out), transform var(--dur-long) var(--ease-out);
+    }
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 容器查詢與手機斷點 */
+    @container (max-width: 420px) {
+      .flip-back {
+        grid-template-columns: 1fr;
+      }
+      .postcard-back-left {
+        border-right: none;
+        border-bottom: 1px solid var(--outline-variant);
+        padding-right: 0;
+        padding-bottom: var(--space-sm);
+      }
+    }
+
+    @media (max-width: 840px) {
+      .postcard-gallery,
+      .lounge-grid,
+      .studio-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page-grid {
+        padding: 0 var(--space-md) var(--space-2xl);
+        gap: var(--space-xl);
+      }
+      .deco-frame {
+        padding: var(--space-lg) var(--space-md);
+      }
+      .metrics-strip,
+      .board-rows,
+      .choice-row,
+      .stamp-row {
+        grid-template-columns: 1fr;
+      }
+      .live-postcard-top {
+        flex-direction: column;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration:  0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior:     auto !important;
+      }
+    }
+  </style>
+</head>
+<body data-lighting="fireplace" data-snow="gentle">
+  <div class="ambient-glow" aria-hidden="true"></div>
+  <canvas id="snow-canvas" aria-hidden="true"></canvas>
+
+  <!-- 頂部聖誕松枝花環與暖光燈串 -->
+  <div class="garland-banner" aria-hidden="true">
+    <svg class="garland-svg" viewBox="0 0 1200 76" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- 垂墜金線 -->
+      <path d="M0,8 Q150,48 300,12 T600,14 T900,12 T1200,8" fill="none" stroke="var(--outline)" stroke-width="1.5" opacity="0.8"/>
+      <path d="M0,12 Q150,54 300,16 T600,18 T900,16 T1200,12" fill="none" stroke="var(--secondary)" stroke-width="3" opacity="0.45"/>
+      <!-- 聖誕燈泡 -->
+      <g>
+        <circle class="bulb bulb-warm" cx="90" cy="27" r="5" fill="var(--bulb-warm)"/>
+        <circle class="bulb bulb-crimson" cx="180" cy="30" r="5" fill="var(--bulb-crimson)"/>
+        <circle class="bulb bulb-emerald" cx="270" cy="18" r="4.5" fill="var(--bulb-emerald)"/>
+        <circle class="bulb bulb-warm" cx="370" cy="24" r="5.5" fill="var(--bulb-warm)"/>
+        <circle class="bulb bulb-crimson" cx="465" cy="31" r="5" fill="var(--bulb-crimson)"/>
+        <circle class="bulb bulb-warm" cx="560" cy="19" r="4.5" fill="var(--bulb-warm)"/>
+        <circle class="bulb bulb-emerald" cx="655" cy="22" r="5" fill="var(--bulb-emerald)"/>
+        <circle class="bulb bulb-warm" cx="755" cy="31" r="5.5" fill="var(--bulb-warm)"/>
+        <circle class="bulb bulb-crimson" cx="850" cy="20" r="4.5" fill="var(--bulb-crimson)"/>
+        <circle class="bulb bulb-warm" cx="950" cy="27" r="5" fill="var(--bulb-warm)"/>
+        <circle class="bulb bulb-emerald" cx="1045" cy="31" r="5" fill="var(--bulb-emerald)"/>
+        <circle class="bulb bulb-warm" cx="1135" cy="18" r="5" fill="var(--bulb-warm)"/>
+      </g>
+      <!-- 冬青小漿果點綴 -->
+      <g fill="var(--christmas-crimson-bright)">
+        <circle cx="300" cy="14" r="3.5"/>
+        <circle cx="306" cy="18" r="2.8"/>
+        <circle cx="600" cy="16" r="3.5"/>
+        <circle cx="606" cy="20" r="2.8"/>
+        <circle cx="900" cy="14" r="3.5"/>
+        <circle cx="906" cy="18" r="2.8"/>
+      </g>
+    </svg>
+  </div>
+
+  <main class="page-grid">
+    <!-- 主視覺橫幅與候機室控制台 -->
+    <header class="deco-frame">
+      <!-- 四角聖誕松枝與金線飾角 -->
+      <svg class="corner-sprig tl" viewBox="0 0 48 48" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4,44 L4,4 L44,4" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M10,22 C12,14 18,10 26,10 C20,16 16,20 10,22 Z" fill="var(--secondary)" opacity="0.75"/>
+        <circle cx="14" cy="14" r="2.5" fill="var(--christmas-crimson-bright)"/>
+        <circle cx="18" cy="11" r="2" fill="var(--christmas-crimson-bright)"/>
+      </svg>
+      <svg class="corner-sprig tr" viewBox="0 0 48 48" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4,44 L4,4 L44,4" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M10,22 C12,14 18,10 26,10 C20,16 16,20 10,22 Z" fill="var(--secondary)" opacity="0.75"/>
+        <circle cx="14" cy="14" r="2.5" fill="var(--christmas-crimson-bright)"/>
+        <circle cx="18" cy="11" r="2" fill="var(--christmas-crimson-bright)"/>
+      </svg>
+      <svg class="corner-sprig bl" viewBox="0 0 48 48" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4,44 L4,4 L44,4" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M10,22 C12,14 18,10 26,10 C20,16 16,20 10,22 Z" fill="var(--secondary)" opacity="0.75"/>
+        <circle cx="14" cy="14" r="2.5" fill="var(--christmas-crimson-bright)"/>
+      </svg>
+      <svg class="corner-sprig br" viewBox="0 0 48 48" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4,44 L4,4 L44,4" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M10,22 C12,14 18,10 26,10 C20,16 16,20 10,22 Z" fill="var(--secondary)" opacity="0.75"/>
+        <circle cx="14" cy="14" r="2.5" fill="var(--christmas-crimson-bright)"/>
+      </svg>
+
+      <p class="flanked"><span class="latin-kicker">WINTER TERMINAL · GATE 12</span></p>
+      <h1 class="hero-title">啟程的<span class="gold-accent">候機時光</span></h1>
+      <p class="hero-lede">
+        在登機廣播響起前的靜謐片刻，窗外正落著冬夜細雪，候機室的黃銅壁燈與聖誕松枝花環在玻璃上映出溫柔光暈。打開筆記本裡珍藏的兩張明信片，寫下給遠方的冬日祝願，再從容踏上跨夜的航班。
+      </p>
+
+      <!-- 候機室氛圍控制台 -->
+      <div class="ambiance-console" role="region" aria-label="候機室氛圍控制台">
+        <div class="console-group">
+          <span class="console-label"><i data-lucide="snowflake" width="15" height="15" aria-hidden="true"></i>飄雪強度</span>
+          <button type="button" class="btn btn-sm is-active" id="btn-snow-gentle" onclick="setSnowMode('gentle')">細雪微飄</button>
+          <button type="button" class="btn btn-sm" id="btn-snow-flurry" onclick="setSnowMode('flurry')">冬夜紛飛</button>
+          <button type="button" class="btn btn-sm" id="btn-snow-off" onclick="setSnowMode('off')">靜止賞夜</button>
+        </div>
+
+        <div class="console-group">
+          <span class="console-label"><i data-lucide="lamp-desk" width="15" height="15" aria-hidden="true"></i>室內燈光</span>
+          <button type="button" class="btn btn-sm is-active" id="btn-light-fireplace" onclick="setLightingMode('fireplace')">壁爐暖光</button>
+          <button type="button" class="btn btn-sm" id="btn-light-candle" onclick="setLightingMode('candle')">燭光微暈</button>
+          <button type="button" class="btn btn-sm" id="btn-light-starlight" onclick="setLightingMode('starlight')">午夜星光</button>
+        </div>
+
+        <div class="console-group">
+          <button type="button" class="btn btn-sm btn-crimson" id="btn-chime" onclick="playTerminalChime()">
+            <i data-lucide="bell-ring" width="15" height="15" aria-hidden="true"></i>試聽聖誕登機鈴聲
+          </button>
+        </div>
+      </div>
+
+      <!-- 航廈即時資訊列 -->
+      <div class="metrics-strip">
+        <div class="metric-cell">
+          <div class="metric-label">航廈本地時刻</div>
+          <div class="metric-value" id="live-clock">--:--:--</div>
+          <div class="metric-note">十二號登機門 · 冬季貴賓候機室</div>
+        </div>
+        <div class="metric-cell">
+          <div class="metric-label">聖誕夜啟程航班</div>
+          <div class="metric-value">XMAS-1224</div>
+          <div class="metric-note" id="hero-flight-status">準點候機中 · 窗外微雪</div>
+        </div>
+        <div class="metric-cell">
+          <div class="metric-label">珍藏啟程明信片</div>
+          <div class="metric-value" id="sealed-count-hero">2 / 0</div>
+          <div class="metric-note">兩幅原作影像 · 已封存祝福數</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 第一章：兩張筆記本明信片互動典藏 -->
+    <section class="section-block reveal" aria-labelledby="sec-postcards-title">
+      <div class="section-head">
+        <p class="flanked">CHAPTER I · 筆記本裡的冬日行囊</p>
+        <h2 class="section-title" id="sec-postcards-title">兩張等待蓋上郵戳的啟程明信片</h2>
+        <p class="section-prose">
+          行囊裡夾著筆記本中的兩張明信片：<strong>postcard.jpg</strong> 與 <strong>postcard-2.jpg</strong>。點擊「翻轉背面」可以檢視背面的聖誕航空郵戳與書寫線條，也可以點擊「放大細賞」在暖黃燈光下細看整幅畫面比例與細節。
+        </p>
+      </div>
+
+      <div class="postcard-gallery">
+        <!-- 明信片一：postcard.jpg ([SOURCE_IMAGE_2], 800x600) -->
+        <article class="postcard-unit" id="unit-postcard-1">
+          <div class="postcard-meta-bar">
+            <span class="postcard-tag">postcard.jpg · 800×600</span>
+            <span class="postcard-badge-festive">經典四比三明信片</span>
+          </div>
+
+          <div class="flip-stage">
+            <div class="flip-card ratio-4-3" id="flip-card-1">
+              <div class="flip-face flip-front">
+                <span class="photo-corner tl" aria-hidden="true"></span>
+                <span class="photo-corner tr" aria-hidden="true"></span>
+                <span class="photo-corner bl" aria-hidden="true"></span>
+                <span class="photo-corner br" aria-hidden="true"></span>
+                <img src="[SOURCE_IMAGE_2]" alt="筆記本明信片一：postcard.jpg（800×600）">
+              </div>
+              <div class="flip-face flip-back">
+                <div class="postcard-back-left">
+                  <div>
+                    <div class="postcard-back-kicker">CHRISTMAS AIRMAIL · NO. 01</div>
+                    <p class="postcard-back-note">
+                      「把登機前的安靜與窗外剛落下的雪意折進信紙裡，等飛機穿過雲層，這份祝福就會先一步抵達你的城市。」
+                    </p>
+                  </div>
+                  <div class="postcard-back-sig">POSTMARK · GATE 12 · DEC 24</div>
+                </div>
+                <div class="postcard-back-right">
+                  <div class="stamp-box">
+                    <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M16 3 L19 12 L28 12 L21 17 L24 27 L16 21 L8 27 L11 17 L4 12 L13 12 Z" fill="none" stroke="currentColor" stroke-width="1.6"/>
+                    </svg>
+                    <span>冬夜啟程</span>
+                    <span>24.12</span>
+                  </div>
+                  <div class="address-lines">
+                    <div class="address-line">TO: 遠方惦念的人</div>
+                    <div class="address-line">VIA: 聖誕夜跨洋航班</div>
+                    <div class="address-line">STAMP: 候機室紀念章</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p class="postcard-caption">
+            典藏影像一（<strong>postcard.jpg</strong>），以溫潤的 4:3 經典明信片構圖保存於筆記本中，適合放在候機室木桌上，伴著熱飲寫下給家人的第一行問候。
+          </p>
+
+          <div class="postcard-actions">
+            <button type="button" class="btn btn-sm" id="btn-flip-1" onclick="toggleFlipPostcard(1)">
+              <i data-lucide="rotate-cw" width="15" height="15" aria-hidden="true"></i>翻轉背面
+            </button>
+            <button type="button" class="btn btn-sm" onclick="openInspect(1)">
+              <i data-lucide="zoom-in" width="15" height="15" aria-hidden="true"></i>放大細賞
+            </button>
+            <button type="button" class="btn btn-sm btn-primary" onclick="selectForComposer('postcard-1')">
+              <i data-lucide="pen-tool" width="15" height="15" aria-hidden="true"></i>選用這張寫信
+            </button>
+          </div>
+        </article>
+
+        <!-- 明信片二：postcard-2.jpg ([SOURCE_IMAGE_1], 800x435) -->
+        <article class="postcard-unit" id="unit-postcard-2">
+          <div class="postcard-meta-bar">
+            <span class="postcard-tag">postcard-2.jpg · 800×435</span>
+            <span class="postcard-badge-festive">寬幅全景明信片</span>
+          </div>
+
+          <div class="flip-stage">
+            <div class="flip-card ratio-pano" id="flip-card-2">
+              <div class="flip-face flip-front">
+                <span class="photo-corner tl" aria-hidden="true"></span>
+                <span class="photo-corner tr" aria-hidden="true"></span>
+                <span class="photo-corner bl" aria-hidden="true"></span>
+                <span class="photo-corner br" aria-hidden="true"></span>
+                <img src="[SOURCE_IMAGE_1]" alt="筆記本明信片二：postcard-2.jpg（800×435）">
+              </div>
+              <div class="flip-face flip-back">
+                <div class="postcard-back-left">
+                  <div>
+                    <div class="postcard-back-kicker">PANORAMA EDITION · NO. 02</div>
+                    <p class="postcard-back-note">
+                      「寬幅的風景像極了航廈落地窗外的視野——跑道燈火連成一條金色銀河，我們正準備飛往下一場冬日盛會。」
+                    </p>
+                  </div>
+                  <div class="postcard-back-sig">POSTMARK · LOUNGE NORTH · DEC 24</div>
+                </div>
+                <div class="postcard-back-right">
+                  <div class="stamp-box">
+                    <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="16" cy="16" r="11" fill="none" stroke="currentColor" stroke-width="1.6"/>
+                      <path d="M16 7 L16 25 M7 16 L25 16 M10 10 L22 22 M22 10 L10 22" stroke="currentColor" stroke-width="1.3"/>
+                    </svg>
+                    <span>松雪航空</span>
+                    <span>NO.02</span>
+                  </div>
+                  <div class="address-lines">
+                    <div class="address-line">TO: 一同期待重逢的朋友</div>
+                    <div class="address-line">VIA: 冬季全景紀念郵件</div>
+                    <div class="address-line">STAMP: 聖誕紅鈴火漆</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p class="postcard-caption">
+            典藏影像二（<strong>postcard-2.jpg</strong>），延展為 800×435 寬幅比例，宛如候機長廊盡頭的寬景窗框，收藏啟程時刻最遼闊的期待感。
+          </p>
+
+          <div class="postcard-actions">
+            <button type="button" class="btn btn-sm" id="btn-flip-2" onclick="toggleFlipPostcard(2)">
+              <i data-lucide="rotate-cw" width="15" height="15" aria-hidden="true"></i>翻轉背面
+            </button>
+            <button type="button" class="btn btn-sm" onclick="openInspect(2)">
+              <i data-lucide="zoom-in" width="15" height="15" aria-hidden="true"></i>放大細賞
+            </button>
+            <button type="button" class="btn btn-sm btn-primary" onclick="selectForComposer('postcard-2')">
+              <i data-lucide="pen-tool" width="15" height="15" aria-hidden="true"></i>選用這張寫信
+            </button>
+          </div>
+        </article>
+      </div>
+
+      <!-- 內嵌放大細賞檢視窗 -->
+      <div class="inspect-drawer" id="inspect-drawer" aria-live="polite">
+        <div class="inspect-header">
+          <div>
+            <span class="postcard-tag" id="inspect-tag">postcard.jpg</span>
+            <strong id="inspect-title" style="margin-left: var(--space-sm);">明信片放大細賞</strong>
+          </div>
+          <button type="button" class="btn btn-sm" onclick="closeInspect()">
+            <i data-lucide="x" width="15" height="15" aria-hidden="true"></i>收合預覽
+          </button>
+        </div>
+        <div class="inspect-img-wrap">
+          <img id="inspect-img" src="[SOURCE_IMAGE_2]" alt="放大檢視明信片原圖">
+        </div>
+      </div>
+    </section>
+
+    <!-- 第二章：候機室的節慶時刻推進 -->
+    <section class="section-block reveal" aria-labelledby="sec-lounge-title">
+      <div class="section-head">
+        <p class="flanked">CHAPTER II · 候機時光四重奏</p>
+        <h2 class="section-title" id="sec-lounge-title">從抵達航廈到登機廣播：四段聖誕夜的等待風景</h2>
+        <p class="section-prose">
+          候機並非單純的等待，而是把日常慢慢折疊起來的過渡儀式。點選左側四個時間節點，右側的復古航班看板與隨筆會隨之切換，帶你走過平安夜起飛前的每一道微光。
+        </p>
+      </div>
+
+      <div class="lounge-grid">
+        <div class="timeline-list" role="tablist" aria-label="候機時光時間軸">
+          <button type="button" class="timeline-step is-active" id="step-btn-0" onclick="selectTimelineStep(0)">
+            <span class="step-time">21:15</span>
+            <div>
+              <h3 class="step-title">推開航廈玻璃門，迎面暖意</h3>
+              <p class="step-summary">大衣肩頭還帶著微融的雪粒，辦完報到後，在松枝燈飾下找到靠窗的黃銅燈座。</p>
+            </div>
+          </button>
+          <button type="button" class="timeline-step" id="step-btn-1" onclick="selectTimelineStep(1)">
+            <span class="step-time">22:00</span>
+            <div>
+              <h3 class="step-title">肉桂熱飲與兩張明信片</h3>
+              <p class="step-summary">攤開筆記本裡的 postcard.jpg 與 postcard-2.jpg，趁著咖啡還溫熱，寫下今年冬天的註腳。</p>
+            </div>
+          </button>
+          <button type="button" class="timeline-step" id="step-btn-2" onclick="selectTimelineStep(2)">
+            <span class="step-time">23:10</span>
+            <div>
+              <h3 class="step-title">第一聲柔和的聖誕廣播鈴音</h3>
+              <p class="step-summary">十二號登機門亮起登機準備燈，機場角落的管弦頌歌與廣播聲疊在一起，讓人心跳輕輕加速。</p>
+            </div>
+          </button>
+          <button type="button" class="timeline-step" id="step-btn-3" onclick="selectTimelineStep(3)">
+            <span class="step-time">23:45</span>
+            <div>
+              <h3 class="step-title">收起信箋，步入雪夜空橋</h3>
+              <p class="step-summary">把蓋好郵戳的明信片投進航廈紅色郵筒，沿著燈火通明的空橋登機，向全新的冬季地平線出發。</p>
+            </div>
+          </button>
+        </div>
+
+        <aside class="flight-board" aria-live="polite">
+          <div class="board-top">
+            <span class="board-code">BOARDING TELEMETRY · XMAS-1224</span>
+            <span class="status-pill" id="board-status-pill">CHECK-IN OPEN</span>
+          </div>
+          <div class="board-rows">
+            <div>
+              <div class="board-field-label">候機時段</div>
+              <div class="board-field-val" id="board-time">21:15 CST</div>
+            </div>
+            <div>
+              <div class="board-field-label">登機門 / 座位區</div>
+              <div class="board-field-val" id="board-gate">GATE 12 · 靠窗座</div>
+            </div>
+            <div>
+              <div class="board-field-label">停機坪雪況</div>
+              <div class="board-field-val" id="board-weather">-1°C · 細雪微飄</div>
+            </div>
+            <div>
+              <div class="board-field-label">候機伴侶</div>
+              <div class="board-field-val" id="board-companion">松枝花環與熱可可</div>
+            </div>
+          </div>
+          <div class="board-story" id="board-story">
+            <strong>候機手記：</strong>剛過安檢，空氣裡混合著烘焙麵包與松木香氛的氣味。外頭的雪把遠方跑道的黃燈暈染成柔和的光球，這段不趕時間的空白，正是整趟旅程最溫柔的序幕。
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 第三章：候機室聖誕明信片書寫與火漆蓋印工坊 -->
+    <section class="section-block reveal" id="sec-composer" aria-labelledby="sec-composer-title">
+      <div class="section-head">
+        <p class="flanked">CHAPTER III · 航廈寄信工坊</p>
+        <h2 class="section-title" id="sec-composer-title">為這趟啟程蓋上聖誕郵戳並封存祝福</h2>
+        <p class="section-prose">
+          挑選一張筆記本裡的明信片作為封面，選一枚節慶火漆印章，寫下收件人與你想留給今年冬天的幾句話。封存後的明信片會保存於你的候機信件匣中，隨時回來重讀依然都在。
+        </p>
+      </div>
+
+      <div class="studio-grid">
+        <!-- 表單區 -->
+        <form class="studio-form" onsubmit="saveComposedPostcard(event)">
+          <div class="field-group">
+            <span class="field-label">步驟一：選擇明信片封面</span>
+            <div class="choice-row">
+              <button type="button" class="btn btn-sm is-active" id="cover-btn-1" onclick="setComposerCover('postcard-1')">
+                postcard.jpg (4:3)
+              </button>
+              <button type="button" class="btn btn-sm" id="cover-btn-2" onclick="setComposerCover('postcard-2')">
+                postcard-2.jpg (寬幅)
+              </button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <span class="field-label">步驟二：選擇聖誕火漆郵戳</span>
+            <div class="stamp-row">
+              <button type="button" class="btn btn-sm is-active" id="stamp-btn-pine" onclick="setComposerStamp('pine')">松果金印</button>
+              <button type="button" class="btn btn-sm" id="stamp-btn-star" onclick="setComposerStamp('star')">冬雪星辰</button>
+              <button type="button" class="btn btn-sm" id="stamp-btn-bell" onclick="setComposerStamp('bell')">聖誕紅鈴</button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="input-recipient">步驟三：收件人稱謂</label>
+            <input type="text" class="text-input" id="input-recipient" maxlength="32" value="親愛的旅伴" oninput="updatePreview()">
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="input-city">目的地城市</label>
+            <input type="text" class="text-input" id="input-city" maxlength="32" value="台北 · 暖冬之家" oninput="updatePreview()">
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="input-message">步驟四：聖誕候機祝福短箋</label>
+            <textarea class="text-area" id="input-message" maxlength="160" oninput="updatePreview()">此刻正坐在十二號登機門前的暖燈下，窗外飄著聖誕夜的雪。願這張明信片帶著起飛前的安靜與勇氣，祝你冬夜平安、節日快樂。</textarea>
+          </div>
+
+          <div class="form-feedback" id="composer-feedback" aria-live="polite"></div>
+
+          <button type="submit" class="btn btn-crimson">
+            <i data-lucide="stamp" width="16" height="16" aria-hidden="true"></i>蓋上聖誕郵戳並封存
+          </button>
+        </form>
+
+        <!-- 即時明信片預覽與已封存信件匣 -->
+        <div class="studio-preview-panel">
+          <div class="live-postcard" id="live-postcard-card">
+            <div class="live-postcard-top">
+              <div class="live-thumb-box">
+                <img id="preview-thumb-img" src="[SOURCE_IMAGE_2]" alt="所選明信片封面縮圖">
+              </div>
+              <div class="wax-seal-badge" id="preview-seal-badge">
+                <svg width="52" height="52" viewBox="0 0 56 56" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="28" cy="28" r="24" fill="var(--christmas-crimson)" opacity="0.92"/>
+                  <circle cx="28" cy="28" r="19" fill="none" stroke="var(--primary)" stroke-width="1.5" stroke-dasharray="3 2"/>
+                  <path id="seal-icon-path" d="M28 14 L32 24 L42 24 L34 30 L37 40 L28 34 L19 40 L22 30 L14 24 L24 24 Z" fill="var(--primary)"/>
+                </svg>
+                <span id="preview-seal-label">松果金印 · DEC 24</span>
+              </div>
+            </div>
+
+            <div class="live-postcard-body">
+              <div class="live-recipient">
+                致 <span id="preview-recipient">親愛的旅伴</span> · 寄往 <span id="preview-city">台北 · 暖冬之家</span>
+              </div>
+              <p class="live-message" id="preview-message">
+                此刻正坐在十二號登機門前的暖燈下，窗外飄著聖誕夜的雪。願這張明信片帶著起飛前的安靜與勇氣，祝你冬夜平安、節日快樂。
+              </p>
+            </div>
+
+            <div class="live-postmark">
+              <span id="preview-cover-name">COVER: postcard.jpg</span>
+              <span>AIRMAIL · WINTER LOUNGE</span>
+            </div>
+          </div>
+
+          <div class="saved-outbox">
+            <div class="outbox-header">
+              <span class="field-label" style="margin: 0;">已封存的候機信件匣（<span id="outbox-count">0</span>）</span>
+              <button type="button" class="btn btn-sm" id="btn-clear-outbox" onclick="clearOutbox(this)">清空信件匣</button>
+            </div>
+            <div class="outbox-list" id="outbox-list">
+              <p class="postcard-caption" id="outbox-empty-hint">
+                信件匣目前是空的。填寫左側祝福並點擊「蓋上聖誕郵戳並封存」，你的第一封聖誕候機明信片就會留在這裡。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 第四章：啟程前的五個溫柔儀式 -->
+    <section class="section-block reveal" aria-labelledby="sec-rituals-title">
+      <div class="section-head">
+        <p class="flanked">CHAPTER IV · 登機前的小小儀式</p>
+        <h2 class="section-title" id="sec-rituals-title">起飛前，再確認一次冬日行囊</h2>
+        <p class="section-prose">
+          在最後一次登機廣播響起前，為自己勾選這五件溫柔的小事——你的勾選進度也會與封存的明信片一同保留下來。
+        </p>
+      </div>
+
+      <div class="checklist-panel">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); flex-wrap: wrap;">
+          <span class="field-label" style="margin: 0;">啟程準備進度：<span id="ritual-progress-text">0 / 5 項已完成</span></span>
+          <span class="postcard-tag" id="ritual-status-badge">等待整裝</span>
+        </div>
+        <div class="checklist-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0" id="ritual-progressbar">
+          <div class="checklist-progress-fill" id="ritual-progress-fill"></div>
+        </div>
+        <div class="ritual-grid" id="ritual-grid"></div>
+      </div>
+    </section>
+
+    <footer class="footer-note">
+      <div>啟程的候機時光 · 聖誕夜互動手札 — 結合筆記本影像 postcard.jpg 與 postcard-2.jpg 製作</div>
+      <div>願每一次在雪夜中的等待，都能通往溫暖而明亮的遠方。</div>
+    </footer>
+  </main>
+
+  <api-shim></api-shim>
+  <script>
+    const TIMELINE_DATA = [
+      {
+        time: `21:15 CST`,
+        status: `CHECK-IN OPEN`,
+        boarding: false,
+        heroStatus: `準點候機中 · 窗外微雪`,
+        gate: `GATE 12 · 靠窗座`,
+        weather: `-1°C · 細雪微飄`,
+        companion: `松枝花環與熱可可`,
+        story: `<strong>候機手記：</strong>剛過安檢，空氣裡混合著烘焙麵包與松木香氛的氣味。外頭的雪把遠方跑道的黃燈暈染成柔和的光球，這段不趕時間的空白，正是整趟旅程最溫柔的序幕。`
+      },
+      {
+        time: `22:00 CST`,
+        status: `LOUNGE REST`,
+        boarding: false,
+        heroStatus: `書寫明信片時刻 · 暖燈微亮`,
+        gate: `GATE 12 · 黃銅閱讀桌`,
+        weather: `-2°C · 雪勢漸密`,
+        companion: `兩張明信片與鋼筆`,
+        story: `<strong>候機手記：</strong>把筆記本裡的 postcard.jpg 與 postcard-2.jpg 攤平在深綠色桌墊上。黃銅檯燈打在紙面時，字跡都變得像暖火一樣柔和，那些平常不好意思說出口的感謝，此刻正好寄出。`
+      },
+      {
+        time: `23:10 CST`,
+        status: `BOARDING SOON`,
+        boarding: true,
+        heroStatus: `登機準備 · 響起聖誕鈴音`,
+        gate: `GATE 12 · 優先登機線`,
+        weather: `-2°C · 燈火映雪`,
+        companion: `蓋好郵戳的信箋`,
+        story: `<strong>候機手記：</strong>廣播前奏的兩聲清脆鈴音剛落下，旁邊的旅客不約而同抬起頭微笑。把蓋好聖誕火漆的明信片放進大衣內袋，準備交給櫃台後的紅色航空郵筒。`
+      },
+      {
+        time: `23:45 CST`,
+        status: `NOW BOARDING`,
+        boarding: true,
+        heroStatus: `正在登機 · 祝您旅途平安`,
+        gate: `JETBRIDGE · 12A`,
+        weather: `-3°C · 跑道星光`,
+        companion: `圍巾、護照與冬夜期待`,
+        story: `<strong>候機手記：</strong>踏上空橋的那一步，玻璃外最後幾片雪花正輕輕掠過機翼。回望候機室裡亮著的那排聖誕燈串，知道自己已經把最安心的祝福留在了起飛之前。`
+      }
+    ];
+
+    const RITUAL_ITEMS = [
+      { id: `passport`, text: `核對護照、登機證與 12 號登機門方向` },
+      { id: `postcard`, text: `欣賞完 postcard.jpg 與 postcard-2.jpg 並翻看背面郵戳` },
+      { id: `cocoa`, text: `在黃銅暖燈下喝完一杯熱肉桂可可` },
+      { id: `scarf`, text: `把圍巾與手套放在隨身提袋最順手的位置` },
+      { id: `wish`, text: `望一眼落雪的停機坪，許下給明年的聖誕願望` }
+    ];
+
+    const SEAL_DEFINITIONS = {
+      pine: {
+        label: `松果金印 · DEC 24`,
+        path: `M28 12 L34 22 L28 20 L36 30 L28 28 L38 39 L18 39 L28 28 L20 30 L28 20 L22 22 Z`
+      },
+      star: {
+        label: `冬雪星辰 · DEC 24`,
+        path: `M28 13 L31 23 L41 23 L33 29 L36 39 L28 33 L20 39 L23 29 L15 23 L25 23 Z`
+      },
+      bell: {
+        label: `聖誕紅鈴 · DEC 24`,
+        path: `M28 14 C22 14 19 19 19 26 L16 34 L40 34 L37 26 C37 19 34 14 28 14 Z M25 36 A3 3 0 0 0 31 36 Z`
+      }
+    };
+
+    const appState = {
+      snowMode: `gentle`,
+      lightingMode: `fireplace`,
+      timelineStep: 0,
+      flipped1: false,
+      flipped2: false,
+      cover: `postcard-1`,
+      stamp: `pine`,
+      savedPostcards: [],
+      checkedRituals: []
+    };
+
+    /* 飄雪 Canvas 動畫系統 */
+    let snowAnimId = null;
+    let snowflakes = [];
+
+    function getSnowConfig(mode) {
+      if (mode === `flurry`) return { count: 145, speedScale: 1.55, wind: 0.7 };
+      if (mode === `gentle`) return { count: 68, speedScale: 0.85, wind: 0.25 };
+      return { count: 0, speedScale: 0, wind: 0 };
+    }
+
+    function initSnowflakes(width, height, mode) {
+      const cfg = getSnowConfig(mode);
+      snowflakes = [];
+      for (let i = 0; i < cfg.count; i++) {
+        const depth = Math.random();
+        snowflakes.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          r: 1.1 + depth * 2.6,
+          vy: (0.35 + depth * 1.1) * cfg.speedScale,
+          vx: (Math.random() - 0.5) * 0.4 + cfg.wind * depth,
+          swayPhase: Math.random() * Math.PI * 2,
+          swaySpeed: 0.01 + Math.random() * 0.018,
+          alpha: 0.25 + depth * 0.58,
+          isGold: Math.random() > 0.86
+        });
+      }
+    }
+
+    function startSnowLoop() {
+      const canvas = document.getElementById(`snow-canvas`);
+      if (!canvas) return;
+      const ctx = canvas.getContext(`2d`);
+      if (!ctx) return;
+
+      const reduced = window.matchMedia && window.matchMedia(`(prefers-reduced-motion: reduce)`).matches;
+      if (snowAnimId !== null) {
+        cancelAnimationFrame(snowAnimId);
+        snowAnimId = null;
+      }
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      if (appState.snowMode === `off` || reduced) {
+        ctx.clearRect(0, 0, w, h);
+        return;
+      }
+
+      const rootStyle = getComputedStyle(document.documentElement);
+      const snowRgb = rootStyle.getPropertyValue(`--snow-rgb`).trim() || `245, 237, 224`;
+      const goldRgb = rootStyle.getPropertyValue(`--snow-gold-rgb`).trim() || `230, 198, 117`;
+
+      initSnowflakes(w, h, appState.snowMode);
+
+      function renderFrame() {
+        ctx.clearRect(0, 0, w, h);
+        for (let i = 0; i < snowflakes.length; i++) {
+          const f = snowflakes[i];
+          f.swayPhase += f.swaySpeed;
+          f.x += f.vx + Math.sin(f.swayPhase) * 0.38;
+          f.y += f.vy;
+
+          if (f.y > h + 8) {
+            f.y = -8;
+            f.x = Math.random() * w;
+          }
+          if (f.x > w + 8) f.x = -8;
+          if (f.x < -8) f.x = w + 8;
+
+          ctx.beginPath();
+          ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${f.isGold ? goldRgb : snowRgb}, ${f.alpha})`;
+          ctx.fill();
+        }
+        snowAnimId = requestAnimationFrame(renderFrame);
+      }
+      renderFrame();
+    }
+
+    function setSnowMode(mode) {
+      appState.snowMode = mode;
+      document.body.setAttribute(`data-snow`, mode);
+      [`gentle`, `flurry`, `off`].forEach(function(m) {
+        const btn = document.getElementById(`btn-snow-` + m);
+        if (btn) btn.classList.toggle(`is-active`, m === mode);
+      });
+      startSnowLoop();
+      persistState();
+    }
+
+    function setLightingMode(mode) {
+      appState.lightingMode = mode;
+      document.body.setAttribute(`data-lighting`, mode);
+      [`fireplace`, `candle`, `starlight`].forEach(function(m) {
+        const btn = document.getElementById(`btn-light-` + m);
+        if (btn) btn.classList.toggle(`is-active`, m === mode);
+      });
+      persistState();
+    }
+
+    /* 聖誕登機鈴聲（純 Web Audio API 合成，無外部音檔） */
+    function playTerminalChime() {
+      const btn = document.getElementById(`btn-chime`);
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const notes = [523.25, 659.25, 783.99, 1046.5];
+        const now = ctx.currentTime;
+        notes.forEach(function(freq, idx) {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = `sine`;
+          osc.frequency.setValueAtTime(freq, now + idx * 0.22);
+          gain.gain.setValueAtTime(0.001, now + idx * 0.22);
+          gain.gain.exponentialRampToValueAtTime(0.14, now + idx * 0.22 + 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.22 + 1.15);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + idx * 0.22);
+          osc.stop(now + idx * 0.22 + 1.2);
+        });
+        if (btn) {
+          const original = btn.innerHTML;
+          btn.textContent = `正在播放候機鈴聲…`;
+          setTimeout(function() {
+            btn.innerHTML = original;
+            if (window.lucide) window.lucide.createIcons();
+          }, 1200);
+        }
+      } catch (e) {
+        if (btn) btn.textContent = `目前裝置未開啟音效`;
+      }
+    }
+
+    /* 即時航廈時鐘 */
+    function updateClock() {
+      const el = document.getElementById(`live-clock`);
+      if (!el) return;
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, `0`);
+      const mm = String(now.getMinutes()).padStart(2, `0`);
+      const ss = String(now.getSeconds()).padStart(2, `0`);
+      el.textContent = hh + `:` + mm + `:` + ss;
+    }
+
+    /* 明信片翻面與放大細賞 */
+    function toggleFlipPostcard(num) {
+      const card = document.getElementById(`flip-card-` + num);
+      const btn = document.getElementById(`btn-flip-` + num);
+      if (!card) return;
+      const isFlipped = card.classList.toggle(`is-flipped`);
+      if (num === 1) appState.flipped1 = isFlipped;
+      if (num === 2) appState.flipped2 = isFlipped;
+      if (btn) {
+        btn.innerHTML = isFlipped
+          ? `<i data-lucide="rotate-ccw" width="15" height="15" aria-hidden="true"></i>回到正面`
+          : `<i data-lucide="rotate-cw" width="15" height="15" aria-hidden="true"></i>翻轉背面`;
+        if (window.lucide) window.lucide.createIcons();
+      }
+      persistState();
+    }
+
+    function openInspect(num) {
+      const drawer = document.getElementById(`inspect-drawer`);
+      const img = document.getElementById(`inspect-img`);
+      const tag = document.getElementById(`inspect-tag`);
+      const title = document.getElementById(`inspect-title`);
+      if (!drawer || !img || !tag || !title) return;
+
+      if (num === 1) {
+        img.src = `[SOURCE_IMAGE_2]`;
+        img.alt = `放大細賞：postcard.jpg`;
+        tag.textContent = `postcard.jpg · 800×600`;
+        title.textContent = `明信片一：經典四比三完整視圖`;
+      } else {
+        img.src = `[SOURCE_IMAGE_1]`;
+        img.alt = `放大細賞：postcard-2.jpg`;
+        tag.textContent = `postcard-2.jpg · 800×435`;
+        title.textContent = `明信片二：寬幅全景完整視圖`;
+      }
+      drawer.classList.add(`is-open`);
+      drawer.scrollIntoView({ behavior: `smooth`, block: `nearest` });
+    }
+
+    function closeInspect() {
+      const drawer = document.getElementById(`inspect-drawer`);
+      if (drawer) drawer.classList.remove(`is-open`);
+    }
+
+    function selectForComposer(coverKey) {
+      setComposerCover(coverKey);
+      const sec = document.getElementById(`sec-composer`);
+      if (sec) sec.scrollIntoView({ behavior: `smooth`, block: `start` });
+    }
+
+    /* 第二章時間軸切換 */
+    function selectTimelineStep(idx) {
+      const data = TIMELINE_DATA[idx];
+      if (!data) return;
+      appState.timelineStep = idx;
+
+      for (let i = 0; i < TIMELINE_DATA.length; i++) {
+        const b = document.getElementById(`step-btn-` + i);
+        if (b) b.classList.toggle(`is-active`, i === idx);
+      }
+
+      const pill = document.getElementById(`board-status-pill`);
+      const tEl = document.getElementById(`board-time`);
+      const gEl = document.getElementById(`board-gate`);
+      const wEl = document.getElementById(`board-weather`);
+      const cEl = document.getElementById(`board-companion`);
+      const sEl = document.getElementById(`board-story`);
+      const heroStatus = document.getElementById(`hero-flight-status`);
+
+      if (pill) {
+        pill.textContent = data.status;
+        pill.classList.toggle(`is-boarding`, Boolean(data.boarding));
+      }
+      if (tEl) tEl.textContent = data.time;
+      if (gEl) gEl.textContent = data.gate;
+      if (wEl) wEl.textContent = data.weather;
+      if (cEl) cEl.textContent = data.companion;
+      if (sEl) sEl.innerHTML = data.story;
+      if (heroStatus) heroStatus.textContent = data.heroStatus;
+      persistState();
+    }
+
+    /* 第三章：明信片工坊 */
+    function setComposerCover(coverKey) {
+      appState.cover = coverKey;
+      const b1 = document.getElementById(`cover-btn-1`);
+      const b2 = document.getElementById(`cover-btn-2`);
+      const thumb = document.getElementById(`preview-thumb-img`);
+      const coverName = document.getElementById(`preview-cover-name`);
+      if (b1) b1.classList.toggle(`is-active`, coverKey === `postcard-1`);
+      if (b2) b2.classList.toggle(`is-active`, coverKey === `postcard-2`);
+      if (thumb) {
+        thumb.src = coverKey === `postcard-1` ? `[SOURCE_IMAGE_2]` : `[SOURCE_IMAGE_1]`;
+        thumb.alt = coverKey === `postcard-1` ? `預覽封面：postcard.jpg` : `預覽封面：postcard-2.jpg`;
+      }
+      if (coverName) {
+        coverName.textContent = coverKey === `postcard-1` ? `COVER: postcard.jpg` : `COVER: postcard-2.jpg`;
+      }
+    }
+
+    function setComposerStamp(stampKey) {
+      appState.stamp = stampKey;
+      [`pine`, `star`, `bell`].forEach(function(key) {
+        const b = document.getElementById(`stamp-btn-` + key);
+        if (b) b.classList.toggle(`is-active`, key === stampKey);
+      });
+      const def = SEAL_DEFINITIONS[stampKey] || SEAL_DEFINITIONS.pine;
+      const sealPath = document.getElementById(`seal-icon-path`);
+      const sealLabel = document.getElementById(`preview-seal-label`);
+      if (sealPath) sealPath.setAttribute(`d`, def.path);
+      if (sealLabel) sealLabel.textContent = def.label;
+    }
+
+    function updatePreview() {
+      const recInput = document.getElementById(`input-recipient`);
+      const cityInput = document.getElementById(`input-city`);
+      const msgInput = document.getElementById(`input-message`);
+      const recOut = document.getElementById(`preview-recipient`);
+      const cityOut = document.getElementById(`preview-city`);
+      const msgOut = document.getElementById(`preview-message`);
+
+      if (recInput && recOut) recOut.textContent = recInput.value.trim() || `遠方的朋友`;
+      if (cityInput && cityOut) cityOut.textContent = cityInput.value.trim() || `冬日彼端`;
+      if (msgInput && msgOut) msgOut.textContent = msgInput.value.trim() || `祝你聖誕快樂，願燈火與初雪都溫柔相伴。`;
+    }
+
+    function saveComposedPostcard(event) {
+      event.preventDefault();
+      const recInput = document.getElementById(`input-recipient`);
+      const cityInput = document.getElementById(`input-city`);
+      const msgInput = document.getElementById(`input-message`);
+      const feedback = document.getElementById(`composer-feedback`);
+      const sealBadge = document.getElementById(`preview-seal-badge`);
+
+      const recipient = recInput ? recInput.value.trim() : ``;
+      const city = cityInput ? cityInput.value.trim() : ``;
+      const message = msgInput ? msgInput.value.trim() : ``;
+
+      if (!recipient || message.length < 4) {
+        if (feedback) {
+          feedback.classList.add(`is-error`);
+          feedback.textContent = `請先填寫收件人稱謂與至少四個字的聖誕祝福短箋，再蓋上郵戳。`;
+        }
+        return;
+      }
+
+      if (feedback) {
+        feedback.classList.remove(`is-error`);
+        feedback.textContent = `已為這張明信片蓋上「` + (SEAL_DEFINITIONS[appState.stamp] || SEAL_DEFINITIONS.pine).label + `」並收進候機信件匣。`;
+      }
+
+      if (sealBadge) {
+        sealBadge.classList.remove(`wax-stamp-anim`);
+        void sealBadge.offsetWidth;
+        sealBadge.classList.add(`wax-stamp-anim`);
+      }
+
+      appState.savedPostcards.unshift({
+        id: Date.now(),
+        cover: appState.cover === `postcard-1` ? `postcard.jpg` : `postcard-2.jpg`,
+        stampLabel: (SEAL_DEFINITIONS[appState.stamp] || SEAL_DEFINITIONS.pine).label,
+        recipient: recipient,
+        city: city || `遠方城市`,
+        message: message
+      });
+
+      renderOutbox();
+      persistState();
+    }
+
+    function renderOutbox() {
+      const list = document.getElementById(`outbox-list`);
+      const countEl = document.getElementById(`outbox-count`);
+      const heroCountEl = document.getElementById(`sealed-count-hero`);
+      if (!list) return;
+
+      const count = appState.savedPostcards.length;
+      if (countEl) countEl.textContent = String(count);
+      if (heroCountEl) heroCountEl.textContent = `2 / ` + String(count);
+
+      if (count === 0) {
+        list.innerHTML = `<p class="postcard-caption">信件匣目前是空的。填寫左側祝福並點擊「蓋上聖誕郵戳並封存」，你的第一封聖誕候機明信片就會留在這裡。</p>`;
+        return;
+      }
+
+      list.innerHTML = ``;
+      appState.savedPostcards.forEach(function(item, index) {
+        const card = document.createElement(`div`);
+        card.className = `outbox-item`;
+
+        const textCol = document.createElement(`div`);
+        const title = document.createElement(`div`);
+        title.className = `outbox-item-title`;
+        title.textContent = `致 ` + item.recipient + `（` + item.city + `） · ` + item.cover;
+
+        const msg = document.createElement(`div`);
+        msg.className = `outbox-item-msg`;
+        msg.textContent = item.message + ` — [` + item.stampLabel + `]`;
+
+        textCol.appendChild(title);
+        textCol.appendChild(msg);
+
+        const delBtn = document.createElement(`button`);
+        delBtn.type = `button`;
+        delBtn.className = `btn btn-sm`;
+        delBtn.textContent = `移除`;
+        delBtn.onclick = function() {
+          appState.savedPostcards.splice(index, 1);
+          renderOutbox();
+          persistState();
+        };
+
+        card.appendChild(textCol);
+        card.appendChild(delBtn);
+        list.appendChild(card);
+      });
+    }
+
+    function clearOutbox(btn) {
+      if (appState.savedPostcards.length === 0) return;
+      if (btn && btn.dataset.armed !== `true`) {
+        btn.dataset.armed = `true`;
+        btn.textContent = `再點一次確認清空`;
+        setTimeout(function() {
+          if (btn.dataset.armed === `true`) {
+            btn.dataset.armed = `false`;
+            btn.textContent = `清空信件匣`;
+          }
+        }, 3500);
+        return;
+      }
+      if (btn) {
+        btn.dataset.armed = `false`;
+        btn.textContent = `清空信件匣`;
+      }
+      appState.savedPostcards = [];
+      renderOutbox();
+      persistState();
+    }
+
+    /* 第四章：啟程行囊檢核清單 */
+    function renderRituals() {
+      const grid = document.getElementById(`ritual-grid`);
+      const textEl = document.getElementById(`ritual-progress-text`);
+      const badgeEl = document.getElementById(`ritual-status-badge`);
+      const fillEl = document.getElementById(`ritual-progress-fill`);
+      const barEl = document.getElementById(`ritual-progressbar`);
+      if (!grid) return;
+
+      grid.innerHTML = ``;
+      RITUAL_ITEMS.forEach(function(item) {
+        const checked = appState.checkedRituals.indexOf(item.id) !== -1;
+        const btn = document.createElement(`button`);
+        btn.type = `button`;
+        btn.className = `ritual-item` + (checked ? ` is-checked` : ``);
+        btn.setAttribute(`aria-pressed`, checked ? `true` : `false`);
+        btn.onclick = function() { toggleRitual(item.id); };
+
+        const box = document.createElement(`span`);
+        box.className = `ritual-checkbox`;
+        box.innerHTML = checked ? `<i data-lucide="check" width="14" height="14" aria-hidden="true"></i>` : ``;
+
+        const label = document.createElement(`span`);
+        label.className = `ritual-text`;
+        label.textContent = item.text;
+
+        btn.appendChild(box);
+        btn.appendChild(label);
+        grid.appendChild(btn);
+      });
+
+      const done = appState.checkedRituals.length;
+      const total = RITUAL_ITEMS.length;
+      const pct = Math.round((done / total) * 100);
+      if (textEl) textEl.textContent = done + ` / ` + total + ` 項已完成`;
+      if (fillEl) fillEl.style.width = pct + `%`;
+      if (barEl) barEl.setAttribute(`aria-valuenow`, String(done));
+      if (badgeEl) {
+        badgeEl.textContent = done === total ? `隨時可以登機` : (done > 0 ? `整裝進行中` : `等待整裝`);
+      }
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function toggleRitual(id) {
+      const idx = appState.checkedRituals.indexOf(id);
+      if (idx === -1) {
+        appState.checkedRituals.push(id);
+      } else {
+        appState.checkedRituals.splice(idx, 1);
+      }
+      renderRituals();
+      persistState();
+    }
+
+    /* 捲動顯影 */
+    function initScrollReveal() {
+      const targets = document.querySelectorAll(`.reveal`);
+      if (!(`IntersectionObserver` in window)) {
+        targets.forEach(function(el) { el.classList.add(`is-visible`); });
+        return;
+      }
+      const obs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add(`is-visible`);
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      targets.forEach(function(el) { obs.observe(el); });
+    }
+
+    /* Gemini Notebook State Persistence */
+    async function persistState() {
+      try {
+        if (window.notebookAppApi && typeof window.notebookAppApi.setAppState === `function`) {
+          await window.notebookAppApi.setAppState({
+            snowMode: appState.snowMode,
+            lightingMode: appState.lightingMode,
+            timelineStep: appState.timelineStep,
+            flipped1: appState.flipped1,
+            flipped2: appState.flipped2,
+            cover: appState.cover,
+            stamp: appState.stamp,
+            savedPostcards: appState.savedPostcards,
+            checkedRituals: appState.checkedRituals
+          });
+        }
+      } catch (e) {
+        // Ignore persistence errors silently when previewed outside host
+      }
+    }
+
+    async function restoreState() {
+      try {
+        if (window.notebookAppApi && typeof window.notebookAppApi.getAppState === `function`) {
+          const saved = await window.notebookAppApi.getAppState();
+          if (saved && typeof saved === `object`) {
+            if (saved.snowMode) appState.snowMode = saved.snowMode;
+            if (saved.lightingMode) appState.lightingMode = saved.lightingMode;
+            if (typeof saved.timelineStep === `number`) appState.timelineStep = saved.timelineStep;
+            if (typeof saved.flipped1 === `boolean`) appState.flipped1 = saved.flipped1;
+            if (typeof saved.flipped2 === `boolean`) appState.flipped2 = saved.flipped2;
+            if (saved.cover) appState.cover = saved.cover;
+            if (saved.stamp) appState.stamp = saved.stamp;
+            if (Array.isArray(saved.savedPostcards)) appState.savedPostcards = saved.savedPostcards;
+            if (Array.isArray(saved.checkedRituals)) appState.checkedRituals = saved.checkedRituals;
+          }
+        }
+      } catch (e) {
+        // Ignore restore errors silently when previewed outside host
+      }
+    }
+
+    async function initApp() {
+      await restoreState();
+
+      document.body.setAttribute(`data-lighting`, appState.lightingMode);
+      [`fireplace`, `candle`, `starlight`].forEach(function(m) {
+        const b = document.getElementById(`btn-light-` + m);
+        if (b) b.classList.toggle(`is-active`, m === appState.lightingMode);
+      });
+
+      document.body.setAttribute(`data-snow`, appState.snowMode);
+      [`gentle`, `flurry`, `off`].forEach(function(m) {
+        const b = document.getElementById(`btn-snow-` + m);
+        if (b) b.classList.toggle(`is-active`, m === appState.snowMode);
+      });
+
+      if (appState.flipped1) {
+        const c1 = document.getElementById(`flip-card-1`);
+        const b1 = document.getElementById(`btn-flip-1`);
+        if (c1) c1.classList.add(`is-flipped`);
+        if (b1) b1.innerHTML = `<i data-lucide="rotate-ccw" width="15" height="15" aria-hidden="true"></i>回到正面`;
+      }
+      if (appState.flipped2) {
+        const c2 = document.getElementById(`flip-card-2`);
+        const b2 = document.getElementById(`btn-flip-2`);
+        if (c2) c2.classList.add(`is-flipped`);
+        if (b2) b2.innerHTML = `<i data-lucide="rotate-ccw" width="15" height="15" aria-hidden="true"></i>回到正面`;
+      }
+
+      selectTimelineStep(appState.timelineStep);
+      setComposerCover(appState.cover);
+      setComposerStamp(appState.stamp);
+      updatePreview();
+      renderOutbox();
+      renderRituals();
+      updateClock();
+      setInterval(updateClock, 1000);
+      initScrollReveal();
+      startSnowLoop();
+
+      let resizeTimer = null;
+      window.addEventListener(`resize`, function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(startSnowLoop, 180);
+      });
+
+      if (window.lucide) window.lucide.createIcons();
+      if (window.notebookAppApi && typeof window.notebookAppApi.notifyAppReady === `function`) {
+        window.notebookAppApi.notifyAppReady();
+      }
+    }
+
+    document.addEventListener(`DOMContentLoaded`, initApp);
+  </script>
+</body>
+</html>
